@@ -21,11 +21,19 @@
             evcxr
             openssl
             pkg-config
+            podman
+            podman-compose
             (rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
               extensions = [ "rust-analyzer" "rust-src" ];
             }))
             sqlx-cli
           ];
+          shellHook = ''
+            # Import environment variables
+            eval "$(grep -v '^#' ./.env | xargs)"
+
+            export DATABASE_URL="postgres://''${DB_USER}:''${DB_PASSWORD}@localhost:''${DB_PORT}/''${DB_NAME}"
+          '';
         };
       }
     );
